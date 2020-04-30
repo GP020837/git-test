@@ -1,0 +1,471 @@
+File类
+    文件和目录路径名的抽象表示形式。
+    Java把电脑中的文件和文件夹（目录）封装为了一个File类，我们可以使用File类对文件和文件夹进行操作
+    任何操作系统都能使用File类
+    三个常用单词：
+        file 文件
+        directory 文件夹/目录
+        path 路径
+    路径
+            绝对路径：完整的路径
+                以盘符（c:,d:）开始的路径
+                    c:\\a.txt
+                    d:\\demo\\b.txt
+            相对路径：简化的路径
+                指的是当前项目的根目录（D:\development\hm-basic-code）下的路径可以简化书写
+                D:\development\hm-basic-code\a.txt 简化为 a.txt（可以省略项目的根目录）
+            注意
+                路径是不区分大小写的
+                路径中的文件名称分隔符windows使用反斜杠，反斜杠是转义字符，两个反斜杆代表一个普通的反斜杆
+    构造方法
+        File(String pathname) 通过将给定路径名字符串转换为抽象路径名来创建一个新 File 实例
+        File(String parent,String child) 根据 parent 路径字符串和 child 路径名称字符串创建一个新 File 实例
+            String parent 父路径
+            String child 子路径
+            两个路径拼接为一个路径
+        File(File parent,String child) 根据 parent 抽象路径名和 child 路径名称字符串创建一个新 File 实例
+    静态方法
+        static String pathSeparator 与系统有关的路径分隔符（字符串）
+            路径分隔符 windows ; linux :
+        static char pathSeparatorChar 与系统有关的路径分隔符（字符）
+
+        static String separator 与系统有关的默认名称分隔符（字符串）
+            文件名称分割符 windows \ linux /
+        static char separator 与系统有关的默认名称分隔符（字符）
+    常用方法
+        String getAbsolutePath() 返回此File的绝对路径名称字符串
+        String getPath() 将此File装换为路径名称字符串
+        String getName() 返回由此File表示的文件或目录的名称
+        long length() 返回由此File表示的文件的长度
+            文件夹没有大小概念，不能获取文件夹的大小
+            如果构造方法中给出的路径不存在，那么length()方法返回0
+        boolean exists() 此File表示的文件或目录是否实际存在
+        boolean isDirectory() 此File表示的是否为目录
+        boolean isFile() 此File表示的是否为文件
+        boolean createNewFile() 当且仅当具有该名称的文件尚不存在，创建一个新的空文件
+            注意
+                此方法只能创建文件，不能创建文件夹
+                创建文件的路径必须存在，否则会抛出异常
+        boolean delete() 删除由此File表示的文件或目录
+        boolean mkdir() 创建由此File表示的目录
+        boolean mkdirs() 创建由此File表示的目录，包括任何必需但不存在的父目录
+        String[] list() 返回一个String数组，表示该File目录中的所有子文件或目录
+        File[] listFiles() 返回一个File数组，表示该File目录中的所有子文件或目录
+        File[] listFiles(FileFilter filter)
+            FileFilter接口：用于抽象路径名（File对象）的过滤器
+                作用：用来过滤文件（File对象）
+                抽象方法：用来过滤文件的方法
+                    boolean accept(File pathname)
+        File[] listFiles(FilenameFilter filter)
+            FilenameFilter接口：实现此接口的实现类可用于过滤文件名
+                作用：用于过滤文件名称
+                抽象方法
+                    boolean accept(File dir,String name) 测试指定文件是否应该包含在某一文件列表中
+                    参数
+                        File dir：构造方法中传递的被遍历的目录
+                        String name：使用ListFiles方法遍历目录，获取每一个文件/文件夹的名称
+递归 方法自己调用自己
+    递归的分类
+        直接递归：自己直接调用自己叫直接递归
+        间接递归：自己调用别人的方法，别人的方法又调用回自己就叫间接递归
+    使用前提
+        方法体必须有个跳出递归的逻辑
+    练习
+        打印一个文件夹里面所有的文件和文件目录，包括其本身
+    综合案例
+        搜索某个目录下的.java文件
+
+IO流
+    I:input输入（读取）
+    O:output输出（写入）
+    流:数据（字符，字节） 1个字符=2个字节 1个字节=8个二进制位
+    字节流 （一切皆为字节，字节流可以读取任意文件，但读取中文文件会出现乱码问题）
+        InputStream（此抽象类是字节输入流的超类） 字节输入流
+            成员方法
+                int read() 从输入流中读取数据的下一个字节
+                    调用一次只能读取一个字节，下次调用默认调用下一个字节，当所有字节都读取完了再调用就返回 -1
+                        所以有以下固定写法
+                            int len = 0;
+                            while ((len = fis.read()) != -1){
+                                System.out.print((char) len);
+                            }
+                int read(byte[] b)【高效率】 从输入流中读取一定数量的字节，并将其存储在缓冲区数组 b 中
+                    方法的参数byte[]的作用
+                        起到缓冲作用，存储每次读取到的多个字节
+                        数组的长度一般定义为1024（1kb）或者1024的整数倍
+                    方法的返回值int是什么
+                        每次读取的有效字节个数
+                    所以这个方法也有特定写法
+                        byte[] bytes = new byte[1024];
+                        int len = 0;
+                        while ((len = fis.read(bytes)) != -1) {
+                            System.out.print(new String(bytes, 0, len));
+                        }
+                void close() 关闭此输入流并释放与该流关联的所有系统资源
+            子类
+                FileInputStream 文件字节输入流
+                    作用
+                        把硬盘文件中的数据，读取到内存中使用
+                    构造方法
+                        FileInputStream(String name)
+                        FileInputStream(File file)
+                        参数 读取文件的数据源
+                            String name 文件的路径（不能是文件夹）
+                            File file 文件（不能是文件夹）
+                            构造方法的作用
+                                会创建一个FileInputStream对象
+                                会把FileInputStream对象指向构造方法中要读取的文件
+                    读取数据的原理（硬盘-->内存）
+                        java程序--》JVM--》OS-->OS读取数据的方法--》读取文件
+                    字节输入流的使用步骤（重点）
+                        创建FileInputStream对象，构造方法中绑定要读取的数据源
+                        使用FileInputStream对象中的方法read，读取文件
+                        释放资源
+                【缓冲流】BufferedInputStream 字节缓冲输入流
+                    成员方法
+                        int read() 读取单个字符并返回
+                        int read(byte[] c) 一次读取多个字符，将字符读入数组
+                        void close() 关闭该流并释放与之关联的所有资源
+                    构造方法
+                        BufferedInputStream(InputStream in) 创建一个 BufferedInputStream 并保存其参数，既输入流 in，以便将来使用
+                        BufferedInputStream(InputStream in, int size) 创建一个自定义缓冲区大小的 BufferedInputStream 并保存其参数，既输入流 in，以便将来使用
+                            参数
+                                InputStream in 字节输入流
+                                    我们可以传递FileInputStream，缓冲流会给FileInputStream添加一个缓冲区，提高FileInputStream的读取效率
+                                int size 指定创建缓冲区的大小，不指定则使用默认值
+                    使用步骤（重点）
+                        创建FileInputStream对象，构造方法中绑定要读取的数据源
+                        创建BufferedInputStream对象，构造方法中传递FileInputStream对象，提高FileInputStream对象的读取效率
+                        使用BufferedInputStream对象的方法read，读取文件
+                        释放资源
+                【序列化流】ObjectInputStream 对象的反序列化流
+                    作用：把文件中保存的对象，以流的方式读取出来使用
+                    构造方法
+                        ObjectInputStream(InputStream in)
+                        参数
+                            InputStream in 字节输入流
+                    特有的成员方法
+                        Object readObject() 从 ObjectInputStream 中读取对象(只能获取对象且是第一个，其他会报错,可以把多个对象放到集合中，对集合进行序列化，反序列化操作)
+                            声明抛出了ClassNotFoundException(找不到类异常)
+                                当不存在对象的class文件时抛出此异常
+                    使用步骤
+                        创建ObjectInputStream对象，构造方法中传递字节输出流
+                        使用ObjectInputStream对象的方法readObject，把对象写入文件中
+                        释放资源
+                    反序列化的前提
+                        类必须实现Serializable
+                        必须存在
+        OutputStream（此抽象类是字节输出流的超类） 字节输出流
+            成员方法
+                void close() 关闭此输出流并释放与此流相关联的任何系统资源
+                void flush() 刷新此输出流并强制任何缓冲的输出字节被写出
+                void write(byte[] b) 将 b.length 字节从指定的字节数组写入此输出流
+                void write(byte[] b,int off, int len)  把字节数组的一部分写入到文件中
+                    int off 数组的开始索引
+                    int len 写几个字节
+                abstract void write(int b) 将指定的字节输出流
+            写换行符号
+                windows: \r 或 \n
+                linux: /n
+                mac: /r
+            子类
+                FileOutputStream 文件字节输出流
+                    作用
+                        把内存中的数据写入到硬盘的文件中
+                    构造方法
+                        FileOutputStream(String name) 创建一个向具有指定名称的文件中写入数据的输出文件流
+                        FileOutputStream(File file) 创建一个向指定 File 对象表示的文件中写入数据的文件输入流
+                        FileOutputStream(String name,boolean append) 创建一个向具有指定 name 的文件中写入数据的输出文件流
+                        FileOutputStream(File file,boolean append) 创建一个向执行 file 对象表示的文件中写入数据的文件输出流
+                            参数
+                                String name,File file 写入数据的目的地
+                                boolean append 追加写开关
+                                    true 创建对象不会覆盖源文件，继续在文件的末尾追加写数据
+                                    false 创建一个新对象，覆盖源文件
+                        参数
+                            String name 目的地是一个文件的路径
+                            File file 目的地是一个文件
+                        构造方法的作用
+                            创建一个FileOutputStream对象
+                            会根据构造方法中传递的文件/文件路径，创建一个空的文件
+                            会把FileOutputStream对象指向创建好的文件
+                    写入数据的原理（内存 --> 原理）
+                        java程序--》JVM（java虚拟机）--》OS（操作系统）--》OS调用写数据的方法--》把数据写入到文件中
+                    字节输出流的使用步骤（重点）
+                        创建一个FileOutputStream对象，构造方法中传递写入数据的目的地
+                        调用FileOutputStream对象中的方法write，把数据写入到文件中
+                        释放资源（流使用会占用一定的内存，使用完毕要把内存清空，提供程序的效率）
+                【缓冲流】BufferedOutputStream 字节缓冲输出流
+                    成员方法
+                        void close() 关闭此输出流并释放与此流相关联的任何系统资源
+                        void flush() 刷新此输出流并强制任何缓冲的输出字节被写出
+                        void write(byte[] b) 将 b.length 字节从指定的字节数组写入此输出流
+                        void write(byte[] b,int off, int len)  把字节数组的一部分写入到文件中
+                            int off 数组的开始索引
+                            int len 写几个字节
+                        abstract void write(int b) 将指定的字节输出流
+                    构造方法
+                        BufferedOutputStream(OutputStream out) 创建一个新的缓冲输出流，以数据写入指定的底层输出流
+                        BufferedOutputStream(OutputStream out, int size) 创建一个新的缓冲输出流，以将具有指定缓冲区大小的数据写入指定的底层输出流
+                            参数
+                                OutputStream out 字节输出流对象
+                                    我们可以传递FileOutputStream，缓冲流会给FileOutputStream添加一个缓冲区，提高FileOutputStream的写入效率
+                                int size 指定缓冲流内部缓冲区的大小，不指定就使用默认值
+                    使用步骤（重点）
+                        创建FileOutputStream对象，构造方法中绑定要输出的目的地
+                        创建BufferedOutputStream对象，构造方法中传递FileOutputStream对象，提高FileOutputStream对象效率
+                        使用BufferedOutputStream对象中的方法write，把数据写入到内部缓冲区中
+                        使用BufferedOutputStream对象中的方法flush，把内部缓冲区中的数据，刷新到文件中
+                        释放资源（会先调用资源flush方法刷新数据，第4步可以省略）
+                【序列化流】ObjectOutputStream 对象的序列化流
+                    作用：把对象以流的方式写入到文件中保存
+                    构造方法
+                        ObjectOutputStream(OutputStream out)
+                        参数
+                            OutputStream out 字节输出流
+                    特有的成员方法
+                        void writeObject(Object obj) 将指定的对象写入 ObjectOutputStream 中
+                    使用步骤
+                        创建ObjectOutputStream对象，构造方法中传递字节输出流
+                        使用ObjectOutputStream对象的方法writeObject，把对象写入文件中
+                        释放资源
+                【打印流】PrintStream 打印输出流
+                    为其它流输出流添加了功能，是它们能够方便地打印各种数据值表示形式
+                    特点
+                        只负责数据的输出，不负责数据的读取
+                        与其他输出流不同，不会抛出IOException
+                    特有方法
+                        void print(任何类型的值)
+                        void println(任何类型的值)
+                    构造方法
+                        PrintStream(File file) 输出目的地是一个文件
+                        PrintStream(OutputStream out) 输出的目的地是一个字节输出流
+                        PrintStream(String fileName) 输出的目的地是一个文件路径
+    字符流
+        Reader（此抽象类是字符输入流的超类） 字符输入流
+            成员方法
+                int read() 读取单个字符并返回
+                int read(char[] c) 一次读取多个字符，将字符读入数组
+                void close() 关闭该流并释放与之关联的所有资源
+            子类
+                【转换流】InputStreamReader 字符转换输入流
+                    是字符流通向字节流的桥梁，可以使用指定 charset 编码
+                        构造方法
+                            InputStreamReader(InputStream out) 创建使用默认字符编码的 InputStreamReader 对象
+                            InputStreamReader(InputStream out, String charsetName) 创建使用执行字符集的 InputStreamReader 对象
+                            参数
+                                InputStream out 字节输出流，可以用来写转换之后的字节写到文件中
+                                String charsetName 指定的编码表名称，不区分大小写，可以是utf-8/UTF-8吗，gbk/GBK，... 不指定默认使用 utf-8
+                        使用步骤
+                            创建InputStreamReader对象，构造方法中传递字节输出流和指定的编码表名称
+                            使用InputStreamReader对象的方法read，把字符转换为字节存储在缓冲区中（编码）
+                            使用InputStreamReader对象的方法flush，把内存缓冲区中的字节刷新到文件中
+                            释放资源
+                        注意事项
+                            构造方法中指定的编码表名称要和文件的编码相同，否则会发生乱码
+                FileReader 文件字符输入流
+                    作用：把硬盘文件中的数据以字符的方式读取到内存中
+                    构造方法
+                        FileReader(String fileName)
+                        FileReader(File file)
+                        参数：读取文件的数据源
+                            String fileName 文件的路径
+                            File file 一个文件
+                        FileReader构造方法的作用
+                            创建一个FileReader对象
+                            会把FileReader对象指向要读取的文件
+                    FileReader使用步骤
+                        创建FileReader对象，构造方法中绑定要读取的数据源
+                        使用FileReader对象中的方法read读取文件
+                        释放资源
+                【缓冲流】BufferedReader 字符缓冲输入流
+                成员方法
+                    int read() 读取单个字符并返回
+                    int read(char[] c) 一次读取多个字符，将字符读入数组
+                    void close() 关闭该流并释放与之关联的所有资源
+
+                    String readLine() 读取一个文本行。读取一行数据
+                        行的终止符号：通过下列字符之一即可认为某行已终止：换行（'\n'），回车（'\r'）或回车后直接跟着换行（\r\n）
+                        返回值
+                            包含该行内容的字符串，不包含任何行终止符，如果已达到行末尾，则放回null
+                构造方法
+                    BufferedReader(Reader in) 创建一个使用默认大小的缓冲区的字符缓冲输入流对象
+                    BufferedReader(Reader in, int sz)  创建一个自定义大小的缓冲区的字符缓冲输入流对象
+                        参数
+                            Reader in 我们可以传递FileReader，缓冲流会给FileReader增加一个缓冲区，提高FileReader的读取效率
+                使用步骤
+                    创建字符缓冲输入流对象，构造方法中传递字符输入流
+                    使用字符缓冲输入流中的方法read/readLine读取文本
+                    释放资源
+        Writer（此抽象类是字符输出流的超类） 字符输出流
+            成员方法
+                void write(int c) 写入单个字符
+                void write(char[] c) 写入字符数组
+                abstract void write(char[] c, int off, int len) 写入字符数组的某一部分，off数组的开始索引，len写的字符个数
+                void write(String str) 写入字符串
+                void write(String str, int off, int len) 写入字符串的某一部分，off字符串的开始索引，len写的字符个数
+                void flush() 刷新该流的缓冲
+                void close() 关闭此流，但要先刷新它
+            flush方法和close方法的区别
+                flush 刷新缓冲区，流对象可以继续使用
+                close 先刷新缓冲区，然后通知系统释放资源，关闭了流对象，不能再使用了
+            子类
+                【转换流】OutputStreamWriter 字符转换输出流
+                    是字符流通向字节流的桥梁，可以使用指定 charset 编码
+                    构造方法
+                        OutputStreamWriter(OutputStream out) 创建使用默认字符编码的 OutputStreamWriter 对象
+                        OutputStreamWriter(OutputStream out, String charsetName) 创建使用执行字符集的 OutputStreamWriter 对象
+                        参数
+                            OutputStream out 字节输出流，可以用来写转换之后的字节写到文件中
+                            String charsetName 指定的编码表名称，不区分大小写，可以是utf-8/UTF-8吗，gbk/GBK，... 不指定默认使用 utf-8
+                    使用步骤
+                        创建OutputStreamWriter对象，构造方法中传递字节输出流和指定的编码表名称
+                        使用OutputStreamWriter对象的方法write，把字符转换为字节存储在缓冲区中（编码）
+                        使用OutputStreamWriter对象的方法flush，把内存缓冲区中的字节刷新到文件中
+                        释放资源
+                FileWriter 文件字符输出流
+                    作用：把内存中字符数据写入到文件中
+                    构造方法
+                        FileWriter(File file) 根据给定的 File 对象构造一个 FileWriter 对象
+                        FileWriter(String fileName) 根据给定的文件名构造一个 FileWriter 对象
+                        FileWriter(File file, boolean append)
+                        FileWriter(String fileName, boolean append)
+                            参数
+                                File file，String fileName 写入数据的目的地
+                                boolean append 续写开关
+                                    true 不会创建新的文件覆盖源文件，可以续写
+                                    false 创建新的文件覆盖源文件
+                        参数 写入数据的目的地
+                            File file 一个文件
+                            String fileName 文件的路径
+                        构造方法的作用
+                            会创建一个FileWriter对象
+                            会根据构造方法中传递的文件/文件的路径，创建文件
+                            会把FileWriter对象指向创建好的文件
+                        FileWriter的使用步骤
+                            创建FileWriter对象，构造方法中写入数据的目的地
+                            使用FileWriter中的方法write，把数据写入到内存缓冲区中（字符转字节的过程）
+                            使用FileWriter中的方法flush，把内存缓冲区的数据，刷新到文件中
+                            释放资源（会先把内存缓冲区中的数据刷新到文件中）
+                【缓冲流】BufferedWriter 字符缓冲输出流
+                    成员方法
+                        void write(int c) 写入单个字符
+                        void write(char[] c) 写入字符数组
+                        abstract void write(char[] c, int off, int len) 写入字符数组的某一部分，off数组的开始索引，len写的字符个数
+                        void write(String str) 写入字符串
+                        void write(String str, int off, int len) 写入字符串的某一部分，off字符串的开始索引，len写的字符个数
+                        void flush() 刷新该流的缓冲
+                        void close() 关闭此流，但要先刷新它
+
+                        void newLine() 写一个行分隔符，会根据不同的操作系统，获取不用的行分隔符
+                            换行符号
+                                window \r 或 \n
+                                linux \n
+                                mac \r
+                    构造方法
+                        BufferedWriter(Writer out) 创建一个使用默认大小输出缓冲区的缓冲字符输出流
+                        BufferedWriter(Writer out, int sz) 创建一个自定义大小输出缓冲区的缓冲字符输出流
+                        参数
+                            Writer out 字符输出流
+                                我们可以传递一个FileWriter，缓冲流会给FileWriter增加一个缓冲区，提高FileWriter的写入效率
+                            int sz 自定义缓冲区大小，不写使用默认值
+                    使用步骤
+                        创建字符缓冲输出流对象，构造方法中传递字符输出流
+                        调用字符缓冲输出流中的方法write，把数据写入到内存缓冲区中
+                        调用字符缓冲输出流中的方法flush，把内存缓冲区中的数据，刷新到文件中
+                        释放资源
+    释放资源
+        JDK1.7新特性
+            在try...catch中 try加个() 例：
+                try(){
+                    //可能产生异常的代码
+                }catch(异常类 变量名){
+                    //异常处理逻辑
+                }
+            把需要释放资源的对象写在这个()中，程序就会自动释放资源，无许在finally代码块中写close方法
+        JDK1.9新特性
+            try的前边可以定义流对象
+            在try后面的()中可以直接引入流对象的名称（变量名）
+            在try代码执行完毕之后，流对象也可以释放掉，不用写finally
+            格式
+                A a = new A();
+                B a = new B();
+                try(a,b){
+                    //可能会产生异常的代码
+                }catch(异常类 变量名){
+                    //异常处理逻辑
+                }
+    练习
+        文件的复制
+        文本排序（将文本信息恢复顺序）
+        转换文件编码 （将GBK编码的文本文件，装换为UTF-8的文本文件）
+Properties属性集
+    Properties 集合 extends Hashtable<k,v> implements Map<k,v>
+    Properties 类表示了一个持久的属性集。Properties 可保存在流中 或从流中加载
+    Properties集合是一个唯一和IO流相结合的集合
+        可以使用Properties集合中的方法store，把集合中的临时数据，持久化写入到硬盘中存储
+        可以使用Properties集合中的方法load，把集合中保存的文件（键值对），读取到集合中使用
+
+    属性列表中每个键及其对应值都是一个字符串
+        Properties集合是一个双列集合，key和value默认都是字符串
+    常用方法
+        Object setProperty(String key, String value) 调用 Hashtable 的方法put
+        String getProperty(String key) 通过key找到value值，此方法相当于Map集合中get(key)方法
+        Set<String> stringPropertyNames() 返回此属性列表中的键集，其中该键及其对应值是字符串，此方法相当于Map集合中的keySet方法
+        void store(OutputStream out, String comments) 把集合中的临时数据，持久化写入到硬盘中存储
+        void store(Writer writer, String comments) 把集合中的临时数据，持久化写入到硬盘中存储
+            参数
+                OutputStream out 字节输出流，不能写入中文
+                Writer writer 字符输出流，不能写中文
+                String comments 注释，用来解释说明保存的文件是做什么用的
+                    不能使用中文，会产生乱码，一般使用 "" 空字符串
+            使用步骤
+                创建Properties集合对象，添加数据
+                创建字节输出流/字符输出流对象，构造方法中绑定要输出的目的地
+                使用Properties集合中的方法store，把集合中的临时数据，持久化写入到硬盘中存储
+                释放资源
+        void load(InputStream inSteam) 把集合中保存的文件（键值对），读取到集合中使用
+        void load(Reader reader) 把集合中保存的文件（键值对），读取到集合中使用
+            参数
+                InputStream inSteam 字节输入流，不能读取含有中文的键值对
+                Reader reader 字符输入流，能读取含有中文的键值对
+            使用步骤
+                创建Properties集合对象
+                创建字节/字符输入流对象
+                使用Properties集合对象中的方法load读取保存键值对的文件
+                遍历Properties集合
+            注意
+                存储键值对的文件中，键与值默认的链接符合可以使用=,空格(其他符合)
+                存储键值对的文件中，可以使用#进行注释，被注释的键值对不会被读取
+                存储键值对的文件中，键与值默认都是字符串，不用再加引号
+Serializable接口（标记型接口）
+    序列化和反序列化的时候，会抛出NotSerializableException序列化异常
+    要进行序列化和反序列化的时候，就会检测类上是否有这个标记（就是看这个类有没有实现Serializable接口）
+        有：就可以序列化和反序列化
+        没有：就会抛出会抛出NotSerializableException序列化异常
+序列化
+    static关键字（静态）
+        静态优先于非静态加载到内存中（静态优先于对象进入到内存中）
+        被static修饰的成员变量不能被序列化（变量存储的是默认值），序列化的都是对象
+        private static int age;
+        oos.writeObject(new Person("姓名",18));
+        Object o = ois.readObject();
+        System.out.println(o);
+        Person{name="姓名", age=0}
+    transient关键字（瞬态）
+        被transient修饰的成员变量不能被序列化（变量存储的是默认值）
+        private transient int age;
+        oos.writeObject(new Person("姓名",18));
+        Object o = ois.readObject();
+        System.out.println(o);
+        Person{name="姓名", age=0}
+    反序列化的异常
+        InvalidClassException
+            是因为序列号冲突的原因（修改了标识类的内容，序列号改变），在标识类中添加一行代码
+                private static final long serialVersionUID = 1L;
+                把序列号变量设为常量（不可变）
+    练习
+        序列化集合
+            当我们想在文件中保存多个对象时
+            可以把多个对象存储到一个集合中
+            对集合序列化和反序列化操作

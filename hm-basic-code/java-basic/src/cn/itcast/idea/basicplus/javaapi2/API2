@@ -1,0 +1,72 @@
+Object
+    toString()
+    equals(Object obj);
+    equals(Object a, Object b)
+
+Date
+    构造方法
+        new Date() 获取当前时间
+        new Date(long date) 传入毫秒数获取指定时间
+    成员方法
+        getTime()  获取该时间毫秒数
+
+    DateFormat 抽象类
+        SimpleDateFormat 子类
+            format(Date date) 格式化日期为文本格式 yyyy-MM-dd hh:mm:ss
+
+Calendar 日历类（抽象）
+    常用成员方法
+        static Calendar getInstance() 获得一个日历对象
+
+        int get(int field) 获取给定日历字段的值
+        void set(int field,int value) 将给定的日历字段设置为给定值
+        abstract void add(int field, int amount) 根据日历的规则，为给定的日历字段添加或减去指定的时间量
+        Date getTime() 把日历变成日期
+
+    成员方法的参数
+        int field:日历类的字段，可以使用Calendar类的静态成员变量获取
+            public static final int YEAR = 1;       年
+            public static final int MONTH = 2;       月
+            public static final int DATE = 5;       月中的某一日
+            public static final int DAY_OF_MONTH = 5;       月中的某一日
+            public static final int HOUR = 10;       时
+            public static final int MINUTE = 12;       分
+            public static final int SECOND = 13;       秒
+
+System
+    static long currentTimeMillis() 返回以毫秒为单位的当前时间
+    /**
+     * src 指定数组
+     * srcPoc 原数组开始索引
+     * dest 另一数组
+     * destPoc 另一数组开始索引
+     * length 指定数据数量
+     */
+    static void arraycopy(Object src,int srcPos,Object dest,int desPos,int length) 将数组中指定的数组拷贝到另一个数组中，另一数组发生改变
+
+StringBuilder
+    字符串缓存区，可以提高字符串的操作效率（看成一个长度可以变化的字符串）
+    底层也是一个数组，但是没有被final修饰，可以改变长度
+    byte[] value = new byte[16];
+    构造方法
+        StringBuilder()构造一个不大爱任何字符串的字符串生成器，其初始容量为16个字符。
+        StringBuilder(String str)构造一个字符串生成器，并初始化为指定的字符串内容
+
+    成员方法
+        StringBuilder append(...) 添加任意类型的字符串形式，并返回当前对象自身
+            链式编程，返回this本身，还可以继续调用方法
+        String toString() 转换成String类型
+
+包装类
+    自动拆箱自动装箱
+    基本类型与字符串之间的相互转换
+        基本类型装换为字符串
+            基本类型的值直接相加
+            包装类的静态方法toString(参数)
+                static String toString(int i) 返回一个表示整数的String对象
+            String类的静态方法valueOf(参数)
+                static String valueOf(int i) 返回int参数的字符串表示形式
+        字符串装换为基本类型
+            使用包装类的静态方法parseXXX("字符串")
+                Integer类 static int parseInt(String s)
+                Double类 static double parseDouble(String s)

@@ -1,0 +1,15 @@
+Git
+    下载地址：http://git-scm.com/download
+    Git Bash Here
+        命令
+            ls 当前目录下有哪些内容
+            git --version 查看git版本
+    乌龟版Git
+        创建新的本地仓库
+            工作目录-工作区-版本库（.git文件）
+    Github
+        HTTPS
+        SSH
+            在Git Bash Here（命令符）上输入 ssh-keygen -t rsa 在本地生成密钥盾
+            在Github上项目绑定公密钥（这里就可以把本地仓库项目推送到Github）
+    Gitee(码云)

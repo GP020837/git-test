@@ -1,0 +1,82 @@
+Obects
+    static <T> T requireNonNull(T obj,String str): 查看引用对象不是null,否则抛出空指针异常。str参数是报错的提示
+Throwable(Java语言中所有错误或者异常的超类)
+    常用方法
+        String getMessage() 返回此throwable 的简短描述
+        String toString() 返回此 throwable 的详细消息字符串
+        void printStackTrace() JVM打印异常对象，默认此方法，打印的异常信息是最全面的
+    关键字
+        throw 在指定的方法中抛出指定的异常
+            使用格式：
+                throw new xxxException("异常产生的原因")
+            注意：
+                throw关键字必须写在方法的内部
+                throw关键字后边new的对象，我们就必须处理这个异常
+                throw关键字抛出指定的异常对象，我们就必须处理这个异常
+                    throw关键字后面创建的是RuntimeException或者是RuntimeException 的子类对象，我们可以不处理，默认交给JVM处理（打印异常对象，中断程序）
+                    throw关键字创建的是编译异常（写代码的时候报错），我们就必须处理这个异常，要么throws，要么try...catch...
+        throws 异常处理的第一种方式，交给别人处理
+            作用
+                当方法内部抛出异常对象的时候，那么我们就必须处理这个异常对象
+                可以使用throws关键字处理这个异常对象，会把异常对象声明抛出给方法的调用者处理，最终交给JVM处理-->中断处理
+            使用格式：在方法声明时使用
+                修饰符 返回值类型 方法名（参数列表） throws AAAException,BBBException{
+                    throw new AAAException("产生原因");
+                    throw new BBBException("产生原因");
+                }
+            注意
+                throws关键字必须写在方法声明处
+                throws关键字后面声明的异常必须是Exception或者是Exception的子类
+                方法内部如果抛出了多个异常对象，那么throws后边必须也声明多个异常
+                    如果抛出的多个异常对象有子父关系，那么直接声明父类异常即可
+                调用了一个声明抛出异常的方法，我们就必须处理声明的异常
+                    要么继续使用throws声明抛出，给方法的调用者处理，最终交个JVM处理
+                    要么try..catch...自己处理异常
+
+        try...catch  异常处理的第二种方式，自己处理异常（catch可以有多个）
+            格式
+                try{
+                    可能产生异常的代码
+                }catch(定义一个异常的变量，用来接收try中抛出的异常对象){
+                    异常的处理逻辑，产生异常对象之后，怎么处理异常对象
+                    一般在工作中，会把异常的信息记录到一个日志中
+                }
+                ...
+                catch(异常类名 变量名){
+                }
+        finally
+            格式
+                try{
+                    可能产生异常的代码
+                }catch(定义一个异常的变量，用来接收try中抛出的异常对象){
+                    异常的处理逻辑，产生异常对象之后，怎么处理异常对象
+                    一般在工作中，会把异常的信息记录到一个日志中
+                }
+                ...
+                catch(异常类名 变量名){
+                }finally{
+                    无论是否出现异常都会执行
+                }
+            注意
+                finally不能单独使用，必须和try一起使用
+                finally一般用于资源释放（资源回收），无论程序是否出现异常，最后都要资源释放（IO）
+                尽量不要在finally写return语句，否则永远返回finally中的结果，避免该情况
+    Error：错误
+        错误就相当于程序得了一个无法治愈的毛病，必须修改源代码才能继续执行
+    Exception：编译器异常，进行编译（写代码）java程序出现问题
+        RuntimeException：运行期异常，java程序运行过程中出现的问题
+            异常就相当于程序得了一个小毛病，把异常处理掉，程序可以继续执行
+
+自定义异常
+        Java提供的异常类，不够我们使用，需要自己定义一些异常类
+    格式
+        public class XXXException extends Exception{
+            添加一个空参数构造方法
+            添加一个带异常信息的构造方法
+        }
+    注意
+        自定义异常类一般都是以Exception结尾，说明该类是一个异常类
+        自定义异常类，必须继承Exception或者RuntimeException
+            继承Exception：那么自定义的异常类就是一个编译器异常，如果方法内部抛出了编译器异常，就必须处理这个异常，要么throws，要么try...catch
+            继承RuntimeException：那么自定义的异常类就是一个运行期异常，可以无需处理，默认交给虚拟机处理（中断处理）
+

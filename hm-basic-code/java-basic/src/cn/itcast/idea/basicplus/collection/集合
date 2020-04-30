@@ -1,0 +1,203 @@
+数据结构
+    常用的数据结构
+        栈
+            对数据的存取有一下特点（子弹弹夹）
+                先进后出
+                栈的入口、出口都是栈的顶端位置（入口和出口在同一侧）
+        队列
+            对数据的存取有一下特点（排队）
+                先进先出
+                队列的入口、出口各占一侧
+        数组
+            对数据的存取有一下特点
+                查找元素快：通过索引，可以快速访问指定位置的元素
+                增删元素慢：
+                    先创建一个数组
+                    把源数组的其他元素复制到新数组中
+                    把新数组的地址复制给变量
+                    最后源数组在内存中销毁（垃圾回收）
+        链表
+            单项链表（无序）：链表中只有一条链子，不能保证元素的顺序（存储元素和取出元素的顺序有可能不一致）
+            双向链表（有序）：链表中有两条链子，有一条链子是专门记录元素的顺序，是一个有序的集合
+            对数据的存取有一下特点
+                多个结点之间，通过地址进行连接（手拉手）
+                查找元素慢：链表中地址不是连续的，都必须从头开始查询
+                增删元素快：链表接口，添加/删除一个元素链表的整体结构没有影响，所以增删快（了解结构）
+        红黑树
+            特点：趋近于平衡树（左子树和右子树相等），查询的速度非常快，查询叶子节点最大次数和最小次数不能超过2倍
+            约束：
+                节点可以是红色的或者黑色的
+                根节点是黑色的
+                叶子节点（空节点）是黑色的
+                每个红色的节点的子节点都是黑色的
+                任何一个节点到其每一个叶子节点的所有路径上黑色节点数相同
+
+Collection接口
+    定义的事所有单列集合中共性的方法
+    所有的单例集合都可以使用共性的方法
+    没有带索引的方法
+    JDK9的新特性
+        List接口、Set接口、Map接口：里面添加了一个静态的方法of(E... elements),可以给集合一次性添加多个元素
+        static <E> List<E> of(E... elements)
+        static <E> Set<E> of(E... elements)
+        static <E> Map<E> of(E... elements)
+        使用前提：
+            当集合中存储的元素的个数已经确定了，不在改变时使用
+        注意：
+            of方法只使用于List接口，Set接口，Map接口，不适用于接口的实现类
+            of方法的返回值是一个不能改变的集合，集合不能再使用add,put方法添加元素，否则会抛出异常
+            Set接口和Map接口在调用of方法的时候，不能有重复的元素，否则会抛出异常
+    List接口
+        有序集合（存储元素和取出元素的顺序是一致的）
+        允许存储重复的元素
+        有索引，可以使用普通的for循环遍历
+        List接口中带索引的方法（特有）
+            void add(int index,E element):将指定的元素，添加到该集合中的指定位置上
+            E get(int index):返回集合中指定的元素
+            E remove(int index):移除列表中指定位置的元素，返回被移除的元素
+            E set(int index,E element):用指定元素替换集合中指定位置的元素，返回值更新前的元素
+        Vector集合
+        ArrayList集合（查询快，增删慢）
+        LinkedList集合
+            底层是一个链表结构，查询慢，增删快
+            里边包含了大量操作首尾元素的方法
+            注意：使用LinkedList集合特有的方法，不能使用多态
+            常用方法
+                void addFirst(E e):将指定元素插入此列表的开头
+                void addLast(E e):将指定元素添加到此列表的结尾
+                void push(E e):将元素推入此列表所表示的堆栈
+                E getFirst():返回此列表的第一个元素
+                E getLast():返回此列表的最后一个元素
+                E removeFirst():移除并返回此列表的第一个元素
+                E removeLast():移除并返回此列表的最后一个元素
+                E pop():从此列表所表示的堆栈处弹出一个元素
+                boolean isEmpty():如果列表不包含元素，则返回true
+    Set接口
+        不允许存储重复元素
+            原理（hashCode(),equals()）：
+                该元素对象需重写hashCode方法和equals方法
+                    重写hashCode()：创建对象生成的哈希值相同
+                    重写equals()：重写后对象比较的是两者value值是否相同，没有重写则比较对象引用的地址是否指向同一地址
+                调用元素的hashCode方法，计算出元素的哈希值，判断哈希值是否有存储在
+                集合中，没有则存储，若有则元素调用equals方法跟存储在集合中哈希值相同
+                的元素做判断，返回true则无需存储，返回false则将该元素发在哈希值相同
+                元素的下面，方便查询
+        没有索引（不能使用普通的for循环遍历）
+        TreeSet集合
+            无序的集合
+        HashSet集合
+            无序的集合
+            底层是一个哈希表结构（查询的读取非常的快）
+                数组+链表
+                数组+红黑树（提高查询速度）
+            LinkedHashSet集合继承HashSet集合
+                底层是一个哈希表（数组+链表/红黑树）+链表：多了一条链表（记录元素的存储顺序），保证元素有序
+                有序的集合（因为底层跟HashSet集合相比，多了一条链表，用来记录元素的存储顺序）
+    集合常用方法
+        boolean add(E e) 把给定的对象添加到当前集合中
+        void clear() 清空集合中所有的元素
+        boolean remove(E e) 把给定的对象当前集合中删除
+        boolean contains(E e) 判断当前集和中是否包含给定的对象
+        boolean isEmpty() 判断当前集合是否为空
+        int size() 返回集合中元素的个数
+        Object[] toArray 把集合中的元素，存储到数组中
+
+    Iterator 迭代器 接口
+        获取迭代器实现类的对象
+            Iterator<String> it = 集合对象.iterator();
+        常用方法
+            boolean hasnext() 判断集合中是否有下一个元素
+            E next() 取出集合中下一个元素
+
+    普通for循环
+        for(var i = 0; i < 长度; i++){
+            sout(i);
+        }
+
+    增强for循环
+        for(数组或集合的数据类型 变量名 : 数组或集合){
+            sout(i);
+        }
+
+    泛型
+        上线限定
+            ？ extends E 代表使用的泛型只能是E类型的子类或本身
+        下线限定
+            ？ super E 代表使用的泛型只能是E类型的父类或本身
+
+    集合综合案例
+        单列斗地主（完成洗牌发牌的动作）
+            使用54张牌打乱顺序，三个玩家参与游戏，三人交替摸排，没人17张牌，最后留三张底牌
+
+可变参数
+    使用前提
+        当方法的参数列表数据类型已经确定，但是参数的格式不确定，就可以使用可变参数。
+    使用格式：定义方法时使用
+        修饰符 返回值类型 方法名（数据类型... 变量名）{}
+        可变参数的原理
+            可变参数底层就是一个数组，根据传递参数个数不同，会创建不同长度的数组，来存储这些参数
+            传递的参数个数，可以是0个（不传递），1,2...多个
+    注意事项
+        一个方法的参数列表，只能有一个可变参数
+        如果方法的参数有多个，那么可变参数必须写在参数列表的末尾
+
+Conllections
+    集合工具类，用来对集合进行操作
+    常用方法
+        static <T> boolean addAll(Collection<T> c,T... elements): 往集合中一起添加一些元素
+        static void shuffle(List<?> list): 打乱集合顺序
+        static <T> void sort(List<T> list): 将集合中元素按照默认规则排序（默认是升序）
+            自定义使用前提：
+                被排序的集合里面存储的元素，必须实现Comparable,重写接口中的方法compareTo定义排序规则
+                Comparable接口的排序规则：自己（this）- 参数 就是 升序
+        static <T> void sort(List<T> list, Comparator<? super T>): 将集合中按照指定规则排序
+        Comparable接口 和 Comparator接口的区别
+            Comparable：自己（this）和别人（参数）比较，自己需要实现Comparable接口，重写比较规则compareTo方法
+            Comparator：实现匿名接口重写比较规则
+
+Map<k,v>
+    Map.Entry<K,V> 在Map接口中有一个内部接口Entry
+        作用：当Map集合一创建，那么就会在Map集合中创建一个Entry对象，用来记录键与值（键值对对象，键与值的映射关系）
+    常用方法
+        V put(K key,V value): 把指定的键与指定的值添加到Map集合中
+            返回值：v
+                存储键值对的时候，key不重复，返回值V是null
+                存储键值对的时候，key重复，会使用新的value替换map中重复key的value，返回被替换的value值
+        V remove(Object key): 把指定的键 所对应的键值对元素，在Map集合中删除，返回被删除的元素
+            返回值：v
+                key存在，v返回被删除的值
+                key不存在，v返回null
+        V get(Object key): 根据指定的键，在Map集合中获取对应的值
+            返回值：
+                key存在，v返回对应的value值
+                key不存在，v返回null
+        boolean containsKey(Object key): 判断集合中是否包含指定的键
+            包含返回true,不包含返回false
+        Set<K> keySet(): 把Map集合所有的key取出来，存储到一个Set集合中
+            实现步骤：
+                使用Map集合中的方法keySet(),把Map集合所有的key取出来，存储到一个Set集合中
+                遍历Set集合，获取Map集合中的每一个key(迭代器 集合对象.iterator();)
+                通过Map集合中的方法get(key)，通过key找到value
+        Set<Map.Entry<K,V>> entrySet(): 返回此映射中包含的映射关系的 Set 视图
+            实现步骤：
+                使用Map集合中的方法entrySet()，把Map集合中多个Entry对象取出来，存储到一个Set集合中
+                遍历Set集合，获取每一个Entry对象
+                使用Entry对象中的方法getKey()和getValue获取键与值
+    HashMap<k,v> 集合 implements Map<k,v> 接口
+        key跟value允许存储null值
+        线程不安全
+        HashMap集合底层是哈希表：查询的速度特别的快
+            jdk1.8之前：数组+单向链表
+            jdk1.8之后：数组+单向链表/红黑树（链表的长度超过8）：提高查询速度
+        HashMap集合是一个无序的集合
+        LinkedHashMap<k,v> 集合 extends HashMap<k,v> 集合
+            LinkedHashMap集合底层是哈希表（数组+单向链表/红黑树）+链表
+            LinkedHashMap集合是一个有序的集合
+    Hashtable<K,V> 集合 implements Map<K,V> 接口
+        key跟value不允许存储null值
+        线程安全
+
+    练习
+        计算一个输入字符串中每个字符出现的次数
+
+斗地主综合案例：双列版本(使牌可以根据索引排序)

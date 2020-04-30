@@ -1,0 +1,126 @@
+JDK 1.6版本以内的API都有官方中文翻译
+    看API主要看三点
+        在那个包
+        有什么构造方法
+        有什么成员方法
+
+Scanner 扫描器
+    常用构造方法
+        new Scanner(System.in) //扫描控制台输入的东西
+    常用方法
+        close() // 关闭此扫描器。
+        next() //下一个输入的字符串
+        nextInt() //下一个输入的数字
+        nextLine() //此扫描器执行当前行，并返回跳过的输入信息。
+
+Random 随机器
+    常用构造方法
+        new Random()
+    常用方法
+        nextInt(int n) //随机产生一个在0（包括）和指定值n（不包括）的数字
+
+ArrayList 数组
+    数组的长度在运行时不可以发生改变
+    ArrayList集合的长度是可以随意变化的
+
+    对于ArrayList来说，有一个尖括号<E>代表泛型
+    泛型：也就是装在集合当中的所有元素，全部是统一的什么类型
+    注意：泛型只能是引用类型，不能是基本类型（如果要储存基本类型数据，必须使用其基本类型的“包装类”）
+    基本类型        包装类
+    btye            Byte
+    short           Short
+    int             Integer
+    long            Long
+    float           Float
+    double          Double
+    char            character
+    boolean         Boolean
+
+    注意事项：
+    对于ArrayList来说，直接打印得到的不是地址值，而是内容
+    如果内容为空，得到的是空的中括号：[]
+
+    常用方法
+        add()
+        get()
+        remove()
+        size()
+
+String 类
+    特点
+        字符串的内容永不可变
+        字符串是可以共享使用的（字符串常量池）
+        字符串效果上相当于char[]字符数组，但是底层原理是byte[]字节数组
+
+    创建字符串的常见3+1种方式：
+        三种构造方法：
+            public String()：创建一个空白字符串，不含任何内容
+            public String(char[] c)：根据字符数组的内容，来创建对应的字符串
+            public String(byte[] b)：根据字节数组的内容，来创建对应的字符串
+        一种直接创建：
+            String str = "Hello";//右边直接用双引号（凡是双引号的，都是字符串对象）
+
+    字符串常量池：
+        程序当中直接写上的双引号字符串，就在字符常量池中。
+
+    比较
+        对于基本数据类型来说 == 是用来做数值的比较
+        对于引用数据类型来说 == 是用来做对象内存地址值【System.identityHashCode(Object x)】的比较。System.identityHashCode(Object x)这个方法用来获取对象的内存地址
+            没有重写equals方法，比较两者所引用的内存地址值是否指向同一内存地址值，跟 == 原理
+            重写equals方法，比较两个对象的value值是否相等
+
+    内存图
+        双引号直接写的字符串，会在常量池当中新建一个常量对象，等在运行时，下一次直接引用。
+        所以
+            String str1 = "abc";
+            String str2 = "abc";
+            System.out.println(str1 == str2);//true (str1和str2保存的都是指向堆内存中指向字符串常量池"abc"字符串对象的地址值)
+        而new出来的不在池当中，而是另外在堆内存当中创建一个新的字符串对象
+
+    常用方法
+        equals() 比较内容是否一样
+        length() 获取字符串长度
+        concat(String str) 将当前字符串和参数字符串拼接成为返回值新的字符串
+        charAt(int index) 获取指定索引位置的单个字符（索引从0开始）
+        indexOf(String str) 查找参数字符串在本字符串当中首次出现的索引位置 如果没有返回 -1 值
+        substring(int index) 截取从参数位置一直到字符串末尾，返回新字符串
+        substring(int begin, int end) 截取从begin开始，一直到end结束，中间的字符串
+        toCharArray() 将字符串转换成字符数组
+        getBytes() 将字符串转换成字节数组 获取当前字符串底层的字节数组
+        replace(CharSequence oldString,CharSequence newString) 将所有出现的老字符串替换成新字符串
+        split(String str) 按照参数的规则，将字符串切分为若干部分（如果要用"."切割，则要写成"\\."，否则切割不成功）
+
+static 静态
+    静态属性，静态方法
+        不属于对象，而属于类
+        可以直接通过类.静态属性，静态方法
+    静态代码块
+        格式
+            public class 类名称{
+                static {
+                    //静态代码块的内容
+                }
+            }
+        特点
+            当第一次用到本类时，静态代码块执行唯一的一次
+            静态内容总是优先于非静态，所有静态代码块比构造方法先执行
+        典型用途
+            用来一次性地对静态成员变量进行赋值
+    注意事项
+        静态不能直接访问非静态（内存当中是先有的静态内容，后有的非静态内容）
+        静态方法当中不能用this（this代表当前对象，通过谁调用的方法，谁就是当前对象）
+            当New 一个对象的时候，并不是先在堆中为对象开辟内存空间，而是先将类中的静态方法（带有static修饰的静态函数）的代码加载到一个叫做方法区的地方，然后 再在堆内存中创建对象。所以说静态方法会随着类的加载而被加载。
+            如果静态方法能调用动态方法的话，那如果别人通过类名调用静态方法时实例对象可能并不存在，但是方法内又调用了对象的方法，由于对象不存在，所以动态方法也不存在，程序肯定报错，所以java直接在编译阶段检查这种错误，避免运行时异常
+
+Arrays 数组工具类（里面有大量的静态方法，用来实现数组常见的操作）
+    常用方法
+        public static String toString(数组) 将参数数组变成字符串（按照默认格式：[元素1,元素2,元素3...]）
+        public static void sort(数组) 按照默认升序（从小到大）对数组的元素进行排序
+            如果是数值，sort默认按照升序从小到大
+            如果是字符串，sort默认按照字符升序
+            如果是自定义类型，那么这个自定义的类需要有Comparable或者Comparator接口的支持。
+Math 数学工具类（里面提供了大量的静态方法，完成与数学运算相关的操作）
+    public static double abs(double num) 获取绝对值
+    public static double ceil(double num) 向上取整
+    public static double floor(double num) 想下取整
+    public static long round(double num) 四舍五入
