@@ -12,7 +12,11 @@ import java.util.Set;
  */
 public class PropertiesTest {
     public static void main(String[] args) throws IOException {
-        show04();
+        printTest();
+    }
+
+    private static void printTest() {
+        System.out.println("HelloWorld!");
     }
 
     private static void show04() throws IOException {
