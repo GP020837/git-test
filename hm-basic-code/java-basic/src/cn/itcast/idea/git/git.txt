@@ -1,5 +1,8 @@
 Git
-    下载地址：http://git-scm.com/download
+    下载地址：
+        http://download.tortoisegit.org/tgit/（乌龟版）
+        点击最稳定的版本 下载64位OS
+        还可以下载中文语言包
     Git Bash Here
         命令
             ls 当前目录下有哪些内容
